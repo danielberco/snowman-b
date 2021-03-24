@@ -12,9 +12,6 @@ run: test
 test: TestRunner.o StudentTest1.o StudentTest2.o StudentTest3.o $(OBJECTS)
 	$(CXX) $(CXXFLAGS) $^ -o test
 
-main: Main.o $(OBJECTS)
-	$(CXX) $(CXXFLAGS) $^ -o main
-
 %.o: %.cpp $(HEADERS)
 	$(CXX) $(CXXFLAGS) --compile $< -o $@
 
@@ -27,9 +24,18 @@ StudentTest2.cpp: # Shlomo Glick
 StudentTest3.cpp: # Eviatar Nachshoni
 	curl https://raw.githubusercontent.com/EN555/EX1-c-/master/Test.cpp > $@
 
+demo: Demo.o $(OBJECTS)
+	$(CXX) $(CXXFLAGS) $^ -o demo
+
+bercod: main
+	./$^
+
+main: main.o $(OBJECTS)
+	$(CXX) $(CXXFLAGS) $^ -o main
+	
 tidy:
 	clang-tidy $(SOURCES) -checks=bugprone-*,clang-analyzer-*,cppcoreguidelines-*,performance-*,portability-*,readability-* --warnings-as-errors=* --
 
 clean:
-	rm -f *.o test
+	rm -f *.o test main mytest demo
 	rm -f StudentTest*.cpp
